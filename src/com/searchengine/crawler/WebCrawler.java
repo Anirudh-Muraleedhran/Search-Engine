@@ -27,7 +27,7 @@ public class WebCrawler {
     {
         urlQueue.add(seedURL);
         //checks queue
-        while(!urlQueue.is(Empty) && visitedURL.size()<maxPages)
+        while(!urlQueue.isEmpty() && visitedURL.size()<maxPages)
         {
             String currentURL = urlQueue.poll();
             if(visitedURL.contains(currentURL))
@@ -45,7 +45,7 @@ public class WebCrawler {
 
             for(String link : links)
             {
-                if(!visitedURLS.contains(link))
+                if(!visitedURL.contains(link))
                 {
                     urlQueue.add(link);
                 }

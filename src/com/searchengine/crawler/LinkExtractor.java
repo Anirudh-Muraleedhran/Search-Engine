@@ -12,8 +12,8 @@ public class LinkExtractor{
     public Set<String> extractLinks(String html)
     {
         Set<String> links  = new HashSet<>();
-        Pattern pattern = Pattern.complie(URL_PATTERN);
-        Matcher matcher = Pattern.matcher(html);
+        Pattern pattern = Pattern.compile(URL_PATTERN);
+        Matcher matcher = pattern.matcher(html);
 
         while(matcher.find())
         {
