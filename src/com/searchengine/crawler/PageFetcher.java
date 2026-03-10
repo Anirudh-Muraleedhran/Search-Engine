@@ -4,18 +4,18 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class PageFetcher()
+public class PageFetcher
 {
     public String fetch(String urlString)
     {
         StringBuilder content = new StringBuilder();
-    }
+    
 
     try
     {
         URL url = new URL(urlString);
         BufferReader reader = new BufferReader(
-            new InputStreamReader(url.openSteam());
+            new InputStreamReader(url.openStream());
         )
         String line;
         while((line = reader.readLine())!= null)
