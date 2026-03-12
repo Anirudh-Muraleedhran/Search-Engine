@@ -1,5 +1,10 @@
 package com.searchengine.crawler;
 
+import com.searchengine.indexing.Indexer;
+import com.searchengine.indexing.InvertedIndex;
+import com.searchengine.indexing.Tokenizer;
+import com.searchengine.indexing.InvertedIndex;
+
 import java.util.*;
 
 public class WebCrawler {
@@ -10,7 +15,7 @@ public class WebCrawler {
     private LinkExtractor linkExtractor;
 
     private int maxPages;
-
+    private Indexer indexer;
     //constructor
     public WebCrawler(int maxPages)
     {
@@ -21,6 +26,11 @@ public class WebCrawler {
 
         pageFetcher = new PageFetcher();
         linkExtractor = new LinkExtractor();
+
+        InvertedIndex invertedIndex = new InvertedIndex();
+        Tokenizer tokenizer = new Tokenizer();
+
+        this.indexer = new Indexer(invertedIndex, tokenizer);
     }
 
     public void startCrawling(String seedURL)
@@ -41,6 +51,13 @@ public class WebCrawler {
             
             String html = pageFetcher.fetch(currentURL);
 
+            if (html != null) {
+
+                String text = html.replaceAll("<[^>]*>", " ");
+
+                indexer.indexText(currentURL, text);
+            }
+
             Set <String> links = linkExtractor.extractLinks(html);
 
             for(String link : links)
@@ -51,5 +68,9 @@ public class WebCrawler {
                 }
             }
         }
+    }
+
+    public InvertedIndex getInvertedIndex() {
+        return indexer.getInvertedIndex();
     }
 }
