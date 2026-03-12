@@ -44,4 +44,21 @@ public class Indexer{
             System.err.println("Failed to read file " +filePath.getFileName() + ": " + e.getMessage());
         }
     }
+    //Indexing the text
+    public void indexText(String documentId, String content)
+    {
+        if(content == null || content.trim().isEmpty())
+        {
+            return ;
+        }
+        List<String> tokens = tokenizer.tokenize(content);
+
+        invertedIndex.addDocument(documentId, tokens);
+        
+        System.out.println("Indexed Page " + documentId + " (" + tokens.size() + " words)");
+    }
+
+    public InvertedIndex getInvertedIndex() {
+    return invertedIndex;
+    }
 }
