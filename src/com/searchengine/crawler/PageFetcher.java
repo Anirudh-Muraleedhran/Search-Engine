@@ -2,6 +2,7 @@ package com.searchengine.crawler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 
 public class PageFetcher {
@@ -12,7 +13,7 @@ public class PageFetcher {
 
         try {
 
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
 
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(url.openStream())
