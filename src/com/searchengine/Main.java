@@ -80,15 +80,15 @@ public class Main {
                 break;
             }
 
-            Map<String, Integer> scores = searchEngine.search(query);
-            List<Map.Entry<String, Integer>> ranked = searchEngine.rankResults(scores);
+            Map<String, Double> scores = searchEngine.search(query);
+            List<Map.Entry<String, Double>> ranked = searchEngine.rankResults(scores);
             
             if (ranked.isEmpty()) {
                 System.out.println("No results found.");
             } else {
                 System.out.println("Results:");
 
-                for (Map.Entry<String, Integer> entry : ranked) {
+                for (Map.Entry<String, Double> entry : ranked){
                     System.out.println(entry.getKey() + " (score: " + entry.getValue() + ")");
                 }
             }
