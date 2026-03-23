@@ -53,18 +53,15 @@ public class WebCrawler {
 
             if (html != null) {
 
-                String text = html.replaceAll("<[^>]*>", " ");
-
+                String text = html.replaceAll("<[^>]*>", " ").toLowerCase();
                 indexer.indexText(currentURL, text);
-            }
 
-            Set <String> links = linkExtractor.extractLinks(html);
+                Set<String> links = linkExtractor.extractLinks(html);
 
-            for(String link : links)
-            {
-                if(!visitedURL.contains(link))
-                {
-                    urlQueue.add(link);
+                for (String link : links) {
+                    if (!visitedURL.contains(link)) {
+                        urlQueue.add(link);
+                    }
                 }
             }
         }
