@@ -19,7 +19,6 @@ public class PageFetcher {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
 
-            // 🔥 CRITICAL: Pretend to be a browser
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
             int status = conn.getResponseCode();
