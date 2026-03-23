@@ -51,6 +51,8 @@ import com.searchengine.crawler.WebCrawler;
 import com.searchengine.search.SearchEngine;
 import com.searchengine.indexing.InvertedIndex;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -60,7 +62,7 @@ public class Main {
 
         WebCrawler crawler = new WebCrawler(10);
 
-        crawler.startCrawling("https://example.com");
+        crawler.startCrawling("https://en.wikipedia.org/wiki/Search_engine");
 
         InvertedIndex index = crawler.getInvertedIndex();
 
@@ -78,14 +80,16 @@ public class Main {
                 break;
             }
 
-            Set<String> results = searchEngine.search(query);
-
-            if (results.isEmpty()) {
+            Map<String, Integer> scores = searchEngine.search(query);
+            List<Map.Entry<String, Integer>> ranked = searchEngine.rankResults(scores);
+            
+            if (ranked.isEmpty()) {
                 System.out.println("No results found.");
             } else {
                 System.out.println("Results:");
-                for (String url : results) {
-                    System.out.println(url);
+
+                for (Map.Entry<String, Integer> entry : ranked) {
+                    System.out.println(entry.getKey() + " (score: " + entry.getValue() + ")");
                 }
             }
         }
