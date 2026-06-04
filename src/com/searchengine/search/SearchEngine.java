@@ -24,15 +24,15 @@ public Map<String, Double> search(String query) {
 
     for (String term : terms) {
 
-        Map<String, Integer> docs = invertedIndex.search(term);
+        Map<String, List<Integer>> docs = invertedIndex.search(term);
         int df = invertedIndex.getDocumentFrequency(term);
         if (df == 0) continue;
         double idf = Math.log((double) totalDocs / df);
 
-        for (Map.Entry<String, Integer> entry : docs.entrySet()) {
+        for (Map.Entry<String, List<Integer>> entry : docs.entrySet()) {
 
             String doc = entry.getKey();
-            int tf = entry.getValue();
+            int tf = entry.getValue().size();
             double tfidf = tf * idf;
             scores.put(doc, scores.getOrDefault(doc, 0.0) + tfidf);
         }
