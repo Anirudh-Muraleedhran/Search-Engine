@@ -69,7 +69,7 @@ public class InvertedIndex{
 
         List<Integer> positions = docs.get(documentId);
 
-        if(posistions == null)
+        if(positions == null)
         {
             return 0;
         }

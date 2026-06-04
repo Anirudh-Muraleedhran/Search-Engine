@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 
-public class SearchEngine{
-
+public class SearchEngine
+{
     private InvertedIndex invertedIndex;
 
     public SearchEngine(InvertedIndex invertedIndex)
@@ -17,35 +18,94 @@ public class SearchEngine{
         this.invertedIndex = invertedIndex;
     }
 
-public Map<String, Double> search(String query) {
-    String[] terms = query.toLowerCase().split("\\s+");
-    Map<String, Double> scores = new HashMap<>();
-    int totalDocs = invertedIndex.getTotalDocuments();
+    public Map<String, Double> search(String query)
+    {
+        String[] terms = query.toLowerCase().split("\\s+");
 
-    for (String term : terms) {
+        Map<String, Double> scores = new HashMap<>();
 
-        Map<String, List<Integer>> docs = invertedIndex.search(term);
-        int df = invertedIndex.getDocumentFrequency(term);
-        if (df == 0) continue;
-        double idf = Math.log((double) totalDocs / df);
+        int totalDocs = invertedIndex.getTotalDocuments();
 
-        for (Map.Entry<String, List<Integer>> entry : docs.entrySet()) {
+        for (String term : terms)
+        {
+            Map<String, List<Integer>> docs =invertedIndex.search(term);
+            int df =invertedIndex.getDocumentFrequency(term);
 
-            String doc = entry.getKey();
-            int tf = entry.getValue().size();
-            double tfidf = tf * idf;
-            scores.put(doc, scores.getOrDefault(doc, 0.0) + tfidf);
+            if (df == 0)
+            {
+                continue;
+            }
+
+            double idf =Math.log((double) totalDocs / df);
+
+            for (Map.Entry<String, List<Integer>> entry :docs.entrySet())
+            {
+                String doc = entry.getKey();
+                int tf = entry.getValue().size();
+                double tfidf = tf * idf;
+
+                scores.put(doc,scores.getOrDefault(doc, 0.0)+ tfidf);
+            }
+        }
+        return scores;
+    }
+
+    public List<Map.Entry<String, Double>> rankResults(Map<String, Double> scores)
+    {
+        List<Map.Entry<String, Double>> list = new ArrayList<>(scores.entrySet());
+
+        list.sort((a, b) ->Double.compare(b.getValue(),a.getValue()));
+
+        return list;
+    }
+
+    public Set<String> phraseSearch(String phrase)
+{
+    String[] terms = phrase.toLowerCase().split("\\s+");
+
+    Set<String> results = new HashSet<>();
+
+    if (terms.length == 0)
+    {
+        return results;
+    }
+
+    Map<String, List<Integer>> firstDocs =invertedIndex.search(terms[0]);
+
+    for (String docId : firstDocs.keySet())
+    {
+        List<Integer> candidates =new ArrayList<>(invertedIndex.getPositions(terms[0],docId));
+
+        for (int i = 1; i < terms.length; i++)
+        {
+            List<Integer> nextPositions =invertedIndex.getPositions(terms[i],docId);
+
+            Set<Integer> nextSet =new HashSet<>(nextPositions);
+                    
+            List<Integer> newCandidates =new ArrayList<>();
+
+            for (int pos : candidates)
+            {
+                if (nextSet.contains(pos + 1))
+                {
+                    newCandidates.add(pos + 1);
+                }
+            }
+
+            candidates = newCandidates;
+
+            if (candidates.isEmpty())
+            {
+                break;
+            }
+        }
+
+        if (!candidates.isEmpty())
+        {
+            results.add(docId);
         }
     }
 
-    return scores;
+    return results;
 }
-
-    public List<Map.Entry<String, Double>> rankResults(Map<String, Double> scores) 
-    {
-        List<Map.Entry<String, Double>> list = new ArrayList<>(scores.entrySet());
-        list.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
-        return list;
-    }   
 }
-
