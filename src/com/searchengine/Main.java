@@ -1,50 +1,3 @@
-//STATIC DOC INDEXING 
-// package com.searchengine;
-
-// import com.searchengine.search.SearchEngine;
-
-// import java.util.Scanner;
-
-// import com.searchengine.indexing.Indexer;
-// import com.searchengine.indexing.InvertedIndex;
-// import com.searchengine.indexing.Tokenizer;
-
-// import java.util.Set;
-
-// public class Main {
-
-//     public static void main(String[] args) {
-
-//         InvertedIndex invertedIndex = new InvertedIndex();
-//         Tokenizer tokenizer = new Tokenizer();
-//         Indexer indexer = new Indexer(invertedIndex,tokenizer);
-
-//         indexer.indexDocument("data/documents");
-
-//         SearchEngine searchEngine = new SearchEngine(invertedIndex);
-
-//         Scanner scanner = new Scanner(System.in);
-
-//         System.out.println("Search Engine is Ready");
-//         System.out.println("Enter Search Term");
-
-//         String query = scanner.nextLine();
-
-//         Set<String> results = searchEngine.search(query);
-
-//         System.out.println("Results :");
-
-//         for(String doc : results)
-//         {
-//             System.out.println(doc);
-//         }
-//         scanner.close();
-//     }
-// }
-
-
-// WEB CRAWLERS
-
 package com.searchengine;
 
 import com.searchengine.crawler.WebCrawler;
@@ -74,22 +27,50 @@ public class Main {
 
             System.out.println("\nEnter search term (or 'exit'):");
 
-            String query = scanner.nextLine();
+            String query = scanner.nextLine().trim();
 
             if (query.equalsIgnoreCase("exit")) {
                 break;
             }
 
-            Map<String, Double> scores = searchEngine.search(query);
-            List<Map.Entry<String, Double>> ranked = searchEngine.rankResults(scores);
-            
-            if (ranked.isEmpty()) {
-                System.out.println("No results found.");
-            } else {
-                System.out.println("Results:");
+            if (query.startsWith("\"") && query.endsWith("\""))
+            {
+                String phrase = query.substring(1,query.length() - 1).trim();
 
-                for (Map.Entry<String, Double> entry : ranked){
-                    System.out.println(entry.getKey() + " (score: " + entry.getValue() + ")");
+                Set<String> results =searchEngine.phraseSearch(phrase);
+
+                if (results.isEmpty())
+                {
+                    System.out.println("No phrase matches found.");
+                }
+                else
+                {
+                    System.out.println("Phrase Matches:");
+
+                    for (String doc : results)
+                    {
+                        System.out.println(doc);
+                    }
+                }
+            }
+            else
+            {
+                Map<String, Double> scores =searchEngine.search(query);
+
+                List<Map.Entry<String, Double>> ranked =searchEngine.rankResults(scores);
+
+                if (ranked.isEmpty())
+                {
+                    System.out.println("No results found.");
+                }
+                else
+                {
+                    System.out.println("Results:");
+
+                    for (Map.Entry<String, Double> entry : ranked)
+                    {
+                        System.out.println(entry.getKey()+ " (score: "+ entry.getValue()+ ")");
+                    }
                 }
             }
         }
