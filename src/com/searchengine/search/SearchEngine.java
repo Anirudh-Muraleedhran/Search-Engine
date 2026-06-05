@@ -59,53 +59,53 @@ public class SearchEngine
         return list;
     }
 
-    public Set<String> phraseSearch(String phrase)
-{
-    String[] terms = phrase.toLowerCase().split("\\s+");
-
-    Set<String> results = new HashSet<>();
-
-    if (terms.length == 0)
+    public Map<String,Double> phraseSearch(String phrase)
     {
-        return results;
-    }
+        String[] terms = phrase.toLowerCase().split("\\s+");
+        Map<String,Double> scores = new HashMap<>();
 
-    Map<String, List<Integer>> firstDocs =invertedIndex.search(terms[0]);
-
-    for (String docId : firstDocs.keySet())
-    {
-        List<Integer> candidates =new ArrayList<>(invertedIndex.getPositions(terms[0],docId));
-
-        for (int i = 1; i < terms.length; i++)
+        if (terms.length == 0)
         {
-            List<Integer> nextPositions =invertedIndex.getPositions(terms[i],docId);
+            return scores;
+        }
 
-            Set<Integer> nextSet =new HashSet<>(nextPositions);
-                    
-            List<Integer> newCandidates =new ArrayList<>();
+        Map<String, List<Integer>> firstDocs =invertedIndex.search(terms[0]);
 
-            for (int pos : candidates)
+        for (String docId : firstDocs.keySet())
+        {
+            List<Integer> candidates =new ArrayList<>(invertedIndex.getPositions(terms[0],docId));
+
+            for (int i = 1; i < terms.length; i++)
             {
-                if (nextSet.contains(pos + 1))
+                List<Integer> nextPositions =invertedIndex.getPositions(terms[i],docId);
+
+                Set<Integer> nextSet =new HashSet<>(nextPositions);
+                        
+                List<Integer> newCandidates =new ArrayList<>();
+
+                for (int pos : candidates)
                 {
-                    newCandidates.add(pos + 1);
+                    if (nextSet.contains(pos + 1))
+                    {
+                        newCandidates.add(pos + 1);
+                    }
+                }
+
+                candidates = newCandidates;
+
+                if (candidates.isEmpty())
+                {
+                    break;
                 }
             }
 
-            candidates = newCandidates;
-
-            if (candidates.isEmpty())
+            if (!candidates.isEmpty())
             {
-                break;
+                int phrasefrequency = candidates.size();
+                double score = phrasefrequency * terms.length;
+                scores.put(docId,score);
             }
         }
-
-        if (!candidates.isEmpty())
-        {
-            results.add(docId);
-        }
+        return scores;
     }
-
-    return results;
-}
 }

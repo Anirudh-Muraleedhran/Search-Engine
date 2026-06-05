@@ -37,9 +37,10 @@ public class Main {
             {
                 String phrase = query.substring(1,query.length() - 1).trim();
 
-                Set<String> results =searchEngine.phraseSearch(phrase);
+                Map<String,Double> scores = searchEngine.phraseSearch(phrase);
+                List<Map.Entry<String,Double>> ranked = searchEngine.rankResults(scores);
 
-                if (results.isEmpty())
+                if (scores.isEmpty())
                 {
                     System.out.println("No phrase matches found.");
                 }
@@ -47,9 +48,9 @@ public class Main {
                 {
                     System.out.println("Phrase Matches:");
 
-                    for (String doc : results)
+                    for (Map.Entry<String,Double> entry: ranked)
                     {
-                        System.out.println(doc);
+                        System.out.println(entry.getKey()+" (score: "+entry.getValue() + ")");
                     }
                 }
             }
