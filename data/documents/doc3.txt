@@ -1,2 +1,0 @@
-Search engines use inverted indexes
-Java can be used to build search engines
