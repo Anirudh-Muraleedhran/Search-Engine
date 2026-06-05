@@ -62,11 +62,11 @@ public class SearchEngine
     public Map<String,Double> phraseSearch(String phrase)
     {
         String[] terms = phrase.toLowerCase().split("\\s+");
-        Map<String,Double> scores = new HashMap<>();
+        Map<String,Integer> phraseFrequencies  = new HashMap<>();
 
         if (terms.length == 0)
         {
-            return scores;
+            return new HashMap<>() ;
         }
 
         Map<String, List<Integer>> firstDocs =invertedIndex.search(terms[0]);
@@ -102,10 +102,26 @@ public class SearchEngine
             if (!candidates.isEmpty())
             {
                 int phrasefrequency = candidates.size();
-                double score = phrasefrequency * terms.length;
-                scores.put(docId,score);
+                phraseFrequencies .put(docId,phrasefrequency);
             }
         }
-        return scores;
+        int phraseDF = phraseFrequencies.size();
+        int totalDocs = invertedIndex.getTotalDocuments();
+        if (phraseDF == 0)
+        {
+            return new HashMap<>();
+        }
+        double phraseIDF = Math.log((double) totalDocs / phraseDF);
+
+        Map<String, Double> scores = new HashMap<>();
+
+        for(Map.Entry<String,Integer> entry : phraseFrequencies.entrySet())
+        {
+            String docId = entry.getKey();
+            int tf = entry.getValue();
+            double score = (1 + Math.log(tf)) * phraseIDF;
+            scores.put(docId,score);
+        }
+        return scores ;
     }
 }
