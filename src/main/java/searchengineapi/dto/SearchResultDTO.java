@@ -3,13 +3,21 @@ package searchengineapi.dto;
 public class SearchResultDTO
 {
     private String url;
+    private String title;
+    private String snippet;
     private double score;
 
     public SearchResultDTO(){}
 
-    public SearchResultDTO(String url,double score)
+    public SearchResultDTO(
+            String url,
+            String title,
+            String snippet,
+            double score)
     {
         this.url = url;
+        this.title = title;
+        this.snippet = snippet;
         this.score = score;
     }
 
@@ -18,15 +26,38 @@ public class SearchResultDTO
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String url)
+    {
         this.url = url;
     }
 
-    public double getScore() {
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getSnippet()
+    {
+        return snippet;
+    }
+
+    public void setSnippet(String snippet)
+    {
+        this.snippet = snippet;
+    }
+
+    public double getScore()
+    {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(double score)
+    {
         this.score = score;
     }
 }
