@@ -1,24 +1,26 @@
-package searchengineapi.dto;
+package searchengineapi.model;
 
-public class SearchResultDTO
+public class DocumentMetadata
 {
     private String url;
     private String title;
     private String snippet;
-    private double score;
+    private String fullText;
 
-    public SearchResultDTO(){}
+    public DocumentMetadata()
+    {
+    }
 
-    public SearchResultDTO(
+    public DocumentMetadata(
             String url,
             String title,
             String snippet,
-            double score)
+            String fullText)
     {
         this.url = url;
         this.title = title;
         this.snippet = snippet;
-        this.score = score;
+        this.fullText = fullText;
     }
 
     public String getUrl()
@@ -51,13 +53,13 @@ public class SearchResultDTO
         this.snippet = snippet;
     }
 
-    public double getScore()
+    public String getFullText()
     {
-        return score;
+        return fullText;
     }
 
-    public void setScore(double score)
+    public void setFullText(String fullText)
     {
-        this.score = score;
+        this.fullText = fullText;
     }
 }

@@ -4,8 +4,13 @@ import searchengineapi.indexing.Indexer;
 import searchengineapi.indexing.InvertedIndex;
 import searchengineapi.indexing.Tokenizer;
 import searchengineapi.indexing.InvertedIndex;
+import searchengineapi.service.DocumentMetadataStore;
+import searchengineapi.model.DocumentMetadata;
 
 import java.util.*;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class WebCrawler {
     public Set<String> visitedURL;
@@ -16,10 +21,13 @@ public class WebCrawler {
 
     private int maxPages;
     private Indexer indexer;
+
+    private DocumentMetadataStore metadataStore;
     //constructor
-    public WebCrawler(int maxPages,InvertedIndex invertedIndex)
+    public WebCrawler(int maxPages,InvertedIndex invertedIndex,DocumentMetadataStore metadataStore)
     {
         this.maxPages = maxPages;
+        this.metadataStore = metadataStore;
 
         visitedURL = new HashSet<>();
         urlQueue = new LinkedList<>();
@@ -50,10 +58,16 @@ public class WebCrawler {
             
             String html = pageFetcher.fetch(currentURL);
 
-            if (html != null) {
+            if (html != null) 
+            {
+                Document doc = Jsoup.parse(html);
+                String title = doc.title();
+                String text = doc.body() != null? doc.body().text(): "";
+                String snippet =text.length() > 200? text.substring(0, 200): text;
 
-                String text = html.replaceAll("<[^>]*>", " ").toLowerCase();
-                indexer.indexText(currentURL, text);
+                metadataStore.addMetaData(new DocumentMetadata(currentURL,title,snippet,text));
+
+                indexer.indexText(currentURL,text.toLowerCase());
 
                 Set<String> links = linkExtractor.extractLinks(html);
 
