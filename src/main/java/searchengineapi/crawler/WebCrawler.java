@@ -65,7 +65,7 @@ public class WebCrawler {
                 String text = doc.body() != null? doc.body().text(): "";
                 String snippet =text.length() > 200? text.substring(0, 200): text;
 
-                metadataStore.addMetaData(new DocumentMetadata(currentURL,title,snippet));
+                metadataStore.addMetaData(new DocumentMetadata(currentURL,title,snippet,text));
 
                 indexer.indexText(currentURL,text.toLowerCase());
 

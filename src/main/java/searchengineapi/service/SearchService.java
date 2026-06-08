@@ -7,6 +7,7 @@ import searchengineapi.crawler.WebCrawler;
 import searchengineapi.indexing.InvertedIndex;
 import searchengineapi.model.DocumentMetadata;
 import searchengineapi.search.SearchEngine;
+import searchengineapi.search.SnippetGenerator;
 import searchengineapi.dto.SearchResultDTO;
 import searchengineapi.service.DocumentMetadataStore;
 import searchengineapi.model.DocumentMetadata;
@@ -52,10 +53,10 @@ public class SearchService {
             double score = entry.getValue();
 
             DocumentMetadata metadata = metadataStore.getMetadata(url);
-
+            String querySnippet = SnippetGenerator.generateSnippet(metadata.getFullText(), query);
             if (metadata != null)
             {
-                response.add(new SearchResultDTO(url,metadata.getTitle(),metadata.getSnippet(),score));
+                response.add(new SearchResultDTO(url,metadata.getTitle(),querySnippet,score));
             }
         }
 
@@ -75,10 +76,10 @@ public class SearchService {
             double score = entry.getValue();
 
             DocumentMetadata metadata = metadataStore.getMetadata(url);
-
+            String querySnippet = SnippetGenerator.generateSnippet(metadata.getFullText(), query);
             if(metadata != null)
             {
-                results.add(new SearchResultDTO(url,metadata.getTitle(),metadata.getSnippet(),score));
+                results.add(new SearchResultDTO(url,metadata.getTitle(),querySnippet,score));
             }
         }
 

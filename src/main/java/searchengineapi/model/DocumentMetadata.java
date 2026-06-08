@@ -1,17 +1,26 @@
 package searchengineapi.model;
 
-public class DocumentMetadata {
+public class DocumentMetadata
+{
     private String url;
     private String title;
     private String snippet;
+    private String fullText;
 
-    public DocumentMetadata(){}
-
-    public DocumentMetadata(String url,String title,String snippet)
+    public DocumentMetadata()
     {
-        this.title = title;
+    }
+
+    public DocumentMetadata(
+            String url,
+            String title,
+            String snippet,
+            String fullText)
+    {
         this.url = url;
+        this.title = title;
         this.snippet = snippet;
+        this.fullText = fullText;
     }
 
     public String getUrl()
@@ -19,19 +28,14 @@ public class DocumentMetadata {
         return url;
     }
 
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public String getSnippet()
-    {
-        return snippet;
-    }
-
     public void setUrl(String url)
     {
         this.url = url;
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 
     public void setTitle(String title)
@@ -39,8 +43,23 @@ public class DocumentMetadata {
         this.title = title;
     }
 
+    public String getSnippet()
+    {
+        return snippet;
+    }
+
     public void setSnippet(String snippet)
     {
         this.snippet = snippet;
+    }
+
+    public String getFullText()
+    {
+        return fullText;
+    }
+
+    public void setFullText(String fullText)
+    {
+        this.fullText = fullText;
     }
 }
