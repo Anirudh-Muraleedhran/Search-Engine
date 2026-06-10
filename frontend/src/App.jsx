@@ -14,7 +14,6 @@ function App() {
 
     setResults(data);
   };
-
   return (
     <div style={{ padding: "30px" }}>
 
@@ -24,8 +23,8 @@ function App() {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search..."
-      />
+        onKeyDown={(e) => {
+        if (e.key === "Enter") { handleSearch();}}}placeholder="Search..."/>
 
       <button onClick={handleSearch}>
         Search
