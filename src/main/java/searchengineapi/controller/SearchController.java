@@ -9,7 +9,9 @@ import java.util.*;
 import searchengineapi.dto.SearchResultDTO;
 import searchengineapi.service.SearchService;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
 public class SearchController {
